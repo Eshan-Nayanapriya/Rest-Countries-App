@@ -140,7 +140,7 @@ The following custom API endpoints are provided:
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/SE1020-IT2070-OOP-DSA-25/af-2-Eshan-Nayanapriya.git
+git clone https://github.com/Eshan-Nayanapriya/Rest-Countries-App.git
 cd rest-countries-app
 ```
 
