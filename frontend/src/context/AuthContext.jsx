@@ -37,6 +37,14 @@ export const AuthProvider = ({ children }) => {
    * Load user data from API if they have a valid session
    */
   const loadUser = useCallback(async () => {
+    // Check if we have a token in localStorage
+    const token = localStorage.getItem('authToken');
+    
+    if (!token) {
+      setLoading(false);
+      return;
+    }
+    
     try {
       setLoading(true);
       const res = await authApi.me();
@@ -44,8 +52,9 @@ export const AuthProvider = ({ children }) => {
       setError(null);
     } catch (err) {
       console.error("Error loading user:", err);
+      // Clear invalid token
+      localStorage.removeItem('authToken');
       setUser(null);
-      // Don't set error here as this is just a session check
     } finally {
       setLoading(false);
     }
@@ -108,6 +117,7 @@ export const AuthProvider = ({ children }) => {
       console.error("Error during logout:", err);
       // Continue with logout even if API call fails
     } finally {
+      localStorage.removeItem('authToken');
       setUser(null);
       setError(null);
     }

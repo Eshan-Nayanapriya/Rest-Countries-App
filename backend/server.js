@@ -14,8 +14,14 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "https://rest-countries-app-new.vercel.app",
+    // Allow both development and production frontends
+    origin: [,
+      "http://localhost:5173",
+      "https://rest-countries-app-new.vercel.app",
+    ],
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"]
   })
 );
 
