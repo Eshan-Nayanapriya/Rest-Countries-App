@@ -29,8 +29,18 @@ const Navbar = () => {
     setLogoutConfirmOpen(false);
     navigate("/");
   };
-
   const handleHomeClick = () => {
+    // Reset search filters in storage before navigating home
+    try {
+      localStorage.setItem("worldview_search_filters", JSON.stringify({
+        searchQuery: "",
+        region: "All",
+        language: "All"
+      }));
+    } catch (err) {
+      console.error("Error resetting search filters:", err);
+    }
+    
     // Force a page refresh when clicking home or logo
     window.location.href = "/";
   };

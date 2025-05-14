@@ -4,6 +4,10 @@ import { favoritesApi } from "../services/authApi";
 import CountryList from "../components/countries/CountryList";
 import { useAuth } from "../context/AuthContext";
 import { countryApi } from "../services/countryApi";
+import { 
+  getFavoriteCountries,
+  saveFavoriteCountries
+} from "../utils/storage";
 
 const Favorites = () => {
   const { user } = useAuth();
@@ -13,22 +17,42 @@ const Favorites = () => {
 
   useEffect(() => {
     if (!user) return;
+    
+    // First try to load cached favorites for immediate display
+    const cachedFavorites = getFavoriteCountries();
+    if (cachedFavorites && cachedFavorites.length > 0) {
+      setCountries(cachedFavorites);
+      setLoading(false);
+    }
+
+    // Fetch fresh favorites data from the API
     const fetchFavorites = async () => {
       try {
-        setLoading(true);
+        // If we didn't have cached data, show loading state
+        if (!cachedFavorites || cachedFavorites.length === 0) {
+          setLoading(true);
+        }
+        
         const favRes = await favoritesApi.get();
         const allCountries = await countryApi.getAllCountries();
         const favCountries = allCountries.filter((c) =>
           favRes.data.favorites.includes(c.cca3)
         );
+        
         setCountries(favCountries);
         setError(null);
+        
+        // Cache the favorites in localStorage for persistence
+        saveFavoriteCountries(favCountries);
       } catch (err) {
+        console.error("Error fetching favorites:", err);
         setError("Failed to load favorites");
       } finally {
         setLoading(false);
       }
     };
+    
+    // Always fetch fresh data
     fetchFavorites();
   }, [user]);
   if (loading)
