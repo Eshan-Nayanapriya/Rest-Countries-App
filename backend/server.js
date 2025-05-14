@@ -15,9 +15,11 @@ app.use(cookieParser());
 app.use(
   cors({
     // Allow both development and production frontends
-    origin: [,
-      "http://localhost:5173",
+    origin: [
+      "http://localhost:5173", 
       "https://rest-countries-app-new.vercel.app",
+      "https://worldview.vercel.app",
+      "https://worldview-app.vercel.app"
     ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
@@ -28,6 +30,14 @@ app.use(
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/favorites", favoritesRoutes);
+
+// Check required environment variables
+const requiredEnvVars = ['MONGODB_URI', 'DB_NAME', 'JWT_SECRET', 'JWT_EXPIRE'];
+const missingEnvVars = requiredEnvVars.filter(varName => !process.env[varName]);
+
+if (missingEnvVars.length > 0) {
+  console.error(`❌ Missing required environment variables: ${missingEnvVars.join(', ')}`);
+}
 
 // Add a root route handler
 app.get("/", (req, res) => {

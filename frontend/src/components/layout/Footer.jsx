@@ -155,10 +155,9 @@ const Footer = () => {
             </Box>
           </Grid>
         </Grid>
-
         <Divider className="my-6 bg-white/30" />
-
-        {/* Footer bottom */}        <Box className="flex flex-col md:flex-row justify-between items-center">
+        {/* Footer bottom */}{" "}
+        <Box className="flex flex-col md:flex-row justify-between items-center">
           <Typography variant="body2" className="text-white/90">
             © {new Date().getFullYear()} WorldView. All rights reserved.
           </Typography>

@@ -45,7 +45,9 @@ const Navbar = () => {
           variant="h6"
           component="div"
           className="flex-grow text-white font-bold flex items-center gap-2"
-        >          <PublicIcon className="text-2xl" />
+        >
+          {" "}
+          <PublicIcon className="text-2xl" />
           <Link
             to="/"
             onClick={handleHomeClick}
@@ -133,7 +135,8 @@ const Navbar = () => {
             variant="contained"
             color="primary"
             fullWidth
-            className="h-10"  sx={{
+            className="h-10"
+            sx={{
               background: "linear-gradient(to right, #1976d2, #8b5cf6)",
               "&:hover": {
                 background: "linear-gradient(to right, #1565c0, #7c3aed)",
