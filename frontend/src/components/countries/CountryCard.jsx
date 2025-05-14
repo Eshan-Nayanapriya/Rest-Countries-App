@@ -38,13 +38,13 @@ const CountryCard = ({ country }) => {
       if (isFav) {
         const res = await favoritesApi.remove(country.cca3);
         setUser({ ...user, favorites: res.data.favorites });
-        
+
         // Update cached favorites in localStorage
         updateFavoriteCountry(country, false);
       } else {
         const res = await favoritesApi.add(country.cca3);
         setUser({ ...user, favorites: res.data.favorites });
-        
+
         // Update cached favorites in localStorage
         updateFavoriteCountry(country, true);
       }

@@ -14,10 +14,12 @@ import { getSearchFilters, saveSearchFilters } from "../utils/storage";
 const Home = () => {
   // Load saved filters from localStorage or use defaults
   const savedFilters = getSearchFilters();
-  
+
   const [countries, setCountries] = useState([]);
   const [filteredCountries, setFilteredCountries] = useState([]);
-  const [searchQuery, setSearchQuery] = useState(savedFilters.searchQuery || "");
+  const [searchQuery, setSearchQuery] = useState(
+    savedFilters.searchQuery || ""
+  );
   const [region, setRegion] = useState(savedFilters.region || "All");
   const [language, setLanguage] = useState(savedFilters.language || "All");
   const [languages, setLanguages] = useState([]);
@@ -96,9 +98,9 @@ const Home = () => {
     saveSearchFilters({
       searchQuery,
       region,
-      language
+      language,
     });
-    
+
     setFilteredCountries(filtered);
   }, [searchQuery, region, language, countries]);
 

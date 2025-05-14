@@ -1,12 +1,10 @@
-
 // Storage keys
 export const STORAGE_KEYS = {
   CURRENT_COUNTRY: "worldview_current_country",
   FAVORITE_COUNTRIES: "worldview_favorite_countries",
   SEARCH_FILTERS: "worldview_search_filters",
-  AUTH_TOKEN: "authToken" // Keeping the existing key name for compatibility
+  AUTH_TOKEN: "authToken", // Keeping the existing key name for compatibility
 };
-
 
 export const saveToStorage = (key, data) => {
   try {
@@ -56,20 +54,20 @@ export const getFavoriteCountries = () => {
 
 export const updateFavoriteCountry = (country, isFavorite) => {
   const favorites = getFavoriteCountries();
-  
+
   if (isFavorite) {
     // Add if not already in favorites
-    if (!favorites.some(c => c.cca3 === country.cca3)) {
+    if (!favorites.some((c) => c.cca3 === country.cca3)) {
       favorites.push(country);
     }
   } else {
     // Remove from favorites
-    const index = favorites.findIndex(c => c.cca3 === country.cca3);
+    const index = favorites.findIndex((c) => c.cca3 === country.cca3);
     if (index !== -1) {
       favorites.splice(index, 1);
     }
   }
-  
+
   saveFavoriteCountries(favorites);
 };
 
@@ -78,15 +76,17 @@ export const saveSearchFilters = (filters) => {
 };
 
 export const getSearchFilters = () => {
-  return getFromStorage(STORAGE_KEYS.SEARCH_FILTERS) || {
-    searchQuery: "",
-    region: "All",
-    language: "All"
-  };
+  return (
+    getFromStorage(STORAGE_KEYS.SEARCH_FILTERS) || {
+      searchQuery: "",
+      region: "All",
+      language: "All",
+    }
+  );
 };
 
 export const clearAllData = () => {
-  Object.values(STORAGE_KEYS).forEach(key => {
+  Object.values(STORAGE_KEYS).forEach((key) => {
     removeFromStorage(key);
   });
 };

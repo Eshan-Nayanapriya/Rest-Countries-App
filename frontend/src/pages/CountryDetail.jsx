@@ -13,10 +13,7 @@ import {
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { countryApi } from "../services/countryApi";
-import { 
-  getCurrentCountry, 
-  saveCurrentCountry
-} from "../utils/storage";
+import { getCurrentCountry, saveCurrentCountry } from "../utils/storage";
 
 const CountryDetail = () => {
   const { code } = useParams();
@@ -29,7 +26,7 @@ const CountryDetail = () => {
   useEffect(() => {
     // Check for the country in local storage first
     const storedCountry = getCurrentCountry(code);
-    
+
     if (storedCountry) {
       // Use stored data if available
       setCountry(storedCountry);
@@ -46,17 +43,17 @@ const CountryDetail = () => {
     if (showLoading) {
       setLoading(true);
     }
-    
+
     try {
       const data = await countryApi.getCountryByCode(code);
       const countryData = data[0];
-      
+
       if (countryData) {
         setCountry(countryData);
         // Save to localStorage for persistence on refresh
         saveCurrentCountry(countryData);
       }
-      
+
       setError(null);
     } catch (err) {
       console.error("Error fetching country details:", err);
