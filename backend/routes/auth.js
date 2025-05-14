@@ -20,7 +20,8 @@ router.post("/register", async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000,
-      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production", // Use secure in production 
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // Cross-site cookie in production
     });
     res.json({
       token, // Include token in the response body
@@ -42,8 +43,7 @@ router.post("/login", async (req, res) => {
     if (!email || !password)
       return res.status(400).json({ message: "All fields required" });
     const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ message: "Invalid credentials" });
-    const isMatch = await user.comparePassword(password);
+    if (!user) return res.status(400).json({ message: "Invalid credentials" });    const isMatch = await user.comparePassword(password);
     if (!isMatch)
       return res.status(400).json({ message: "Invalid credentials" });
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
@@ -52,7 +52,8 @@ router.post("/login", async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000,
-      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production", // Use secure in production 
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // Cross-site cookie in production
     });
     res.json({
       token, // Include token in the response body
@@ -69,22 +70,31 @@ router.post("/login", async (req, res) => {
 
 // Logout
 router.post("/logout", (req, res) => {
-  res.clearCookie("token");
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax"
+  });
   res.json({ message: "Logged out" });
 });
 
 // Get current user
 const auth = require("../middleware/auth");
 router.get("/me", auth, async (req, res) => {
-  const user = await User.findById(req.user.id);
-  if (!user) return res.status(404).json({ message: "User not found" });
-  res.json({
-    user: {
-      username: user.username,
-      email: user.email,
-      favorites: user.favorites,
-    },
-  });
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) return res.status(404).json({ message: "User not found" });
+    res.json({
+      user: {
+        username: user.username,
+        email: user.email,
+        favorites: user.favorites,
+      },
+    });
+  } catch (err) {
+    console.error("Error fetching user:", err);
+    res.status(500).json({ message: "Server error" });
+  }
 });
 
 module.exports = router;
