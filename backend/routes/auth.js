@@ -20,7 +20,7 @@ router.post("/register", async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000,
-      secure: process.env.NODE_ENV === "production", // Use secure in production 
+      secure: process.env.NODE_ENV === "production", // Use secure in production
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // Cross-site cookie in production
     });
     res.json({
@@ -43,7 +43,8 @@ router.post("/login", async (req, res) => {
     if (!email || !password)
       return res.status(400).json({ message: "All fields required" });
     const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ message: "Invalid credentials" });    const isMatch = await user.comparePassword(password);
+    if (!user) return res.status(400).json({ message: "Invalid credentials" });
+    const isMatch = await user.comparePassword(password);
     if (!isMatch)
       return res.status(400).json({ message: "Invalid credentials" });
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
@@ -52,7 +53,7 @@ router.post("/login", async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000,
-      secure: process.env.NODE_ENV === "production", // Use secure in production 
+      secure: process.env.NODE_ENV === "production", // Use secure in production
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // Cross-site cookie in production
     });
     res.json({
@@ -73,7 +74,7 @@ router.post("/logout", (req, res) => {
   res.clearCookie("token", {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax"
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
   });
   res.json({ message: "Logged out" });
 });
