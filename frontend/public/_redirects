@@ -1,0 +1,5 @@
+/* This file ensures that any route not matched by files in the public directory
+will be handled by index.html. This is necessary for client-side routing to work
+correctly when using React Router. This file is particularly important for
+routes like /country/:code that don't have actual server-side routes. */ /*
+/index.html 200
