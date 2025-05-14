@@ -1,4 +1,4 @@
-# Country Explorer
+# WorldView
 
 A modern React application that allows users to explore countries around the world using the REST Countries API.
 

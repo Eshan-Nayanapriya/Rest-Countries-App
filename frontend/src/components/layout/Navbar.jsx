@@ -45,14 +45,13 @@ const Navbar = () => {
           variant="h6"
           component="div"
           className="flex-grow text-white font-bold flex items-center gap-2"
-        >
-          <PublicIcon className="text-2xl" />
+        >          <PublicIcon className="text-2xl" />
           <Link
             to="/"
             onClick={handleHomeClick}
             className="no-underline text-inherit hover:text-gray-200 transition-colors"
           >
-            Country Explorer
+            WorldView
           </Link>
         </Typography>
         <Box className="flex gap-4">

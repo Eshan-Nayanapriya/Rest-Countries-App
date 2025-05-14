@@ -66,7 +66,7 @@ const Footer = () => {
           {/* About */}
           <Grid item xs={12} sm={6} md={3}>
             <Typography variant="h6" className="font-bold text-xl mb-4">
-              Country Explorer
+              WorldView
             </Typography>
             <Typography variant="body2" className="text-white/90 mb-4">
               Discover the world's countries, their cultures, and fascinating
@@ -158,10 +158,9 @@ const Footer = () => {
 
         <Divider className="my-6 bg-white/30" />
 
-        {/* Footer bottom */}
-        <Box className="flex flex-col md:flex-row justify-between items-center">
+        {/* Footer bottom */}        <Box className="flex flex-col md:flex-row justify-between items-center">
           <Typography variant="body2" className="text-white/90">
-            © {new Date().getFullYear()} Country Explorer. All rights reserved.
+            © {new Date().getFullYear()} WorldView. All rights reserved.
           </Typography>
           <Box className="flex gap-4 mt-4 md:mt-0">
             {policyLinks.map((item, index) => (

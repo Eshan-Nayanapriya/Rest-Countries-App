@@ -23,6 +23,7 @@ router.post("/register", async (req, res) => {
       sameSite: "lax",
     });
     res.json({
+      token, // Include token in the response body
       user: {
         username: user.username,
         email: user.email,
@@ -54,6 +55,7 @@ router.post("/login", async (req, res) => {
       sameSite: "lax",
     });
     res.json({
+      token, // Include token in the response body
       user: {
         username: user.username,
         email: user.email,
