@@ -51,9 +51,8 @@ describe('Navbar Component', () => {
         <Navbar />
       </MemoryRouter>
     );
-    
-    // Check logo and navigation links
-    expect(screen.getByText('Country Explorer')).toBeInTheDocument();
+      // Check logo and navigation links
+    expect(screen.getByText('WorldView')).toBeInTheDocument();
     expect(screen.getByText('Home')).toBeInTheDocument();
     expect(screen.getByText('Login')).toBeInTheDocument();
   });
