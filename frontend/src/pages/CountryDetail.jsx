@@ -13,6 +13,10 @@ import {
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { countryApi } from "../services/countryApi";
+import { 
+  getCurrentCountry, 
+  saveCurrentCountry
+} from "../utils/storage";
 
 const CountryDetail = () => {
   const { code } = useParams();
@@ -21,20 +25,49 @@ const CountryDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Try to load country from localStorage on initial render
   useEffect(() => {
-    fetchCountryDetails();
+    // Check for the country in local storage first
+    const storedCountry = getCurrentCountry(code);
+    
+    if (storedCountry) {
+      // Use stored data if available
+      setCountry(storedCountry);
+      setLoading(false);
+      // Still fetch in the background for fresh data
+      fetchCountryDetails(false);
+    } else {
+      // No stored data, fetch with loading indicator
+      fetchCountryDetails(true);
+    }
   }, [code]);
 
-  const fetchCountryDetails = async () => {
-    try {
+  const fetchCountryDetails = async (showLoading = true) => {
+    if (showLoading) {
       setLoading(true);
+    }
+    
+    try {
       const data = await countryApi.getCountryByCode(code);
-      setCountry(data[0]);
+      const countryData = data[0];
+      
+      if (countryData) {
+        setCountry(countryData);
+        // Save to localStorage for persistence on refresh
+        saveCurrentCountry(countryData);
+      }
+      
       setError(null);
     } catch (err) {
-      setError("Failed to fetch country details. Please try again later.");
+      console.error("Error fetching country details:", err);
+      if (showLoading) {
+        // Only show error if we were showing loading
+        setError("Failed to fetch country details. Please try again later.");
+      }
     } finally {
-      setLoading(false);
+      if (showLoading) {
+        setLoading(false);
+      }
     }
   };
 

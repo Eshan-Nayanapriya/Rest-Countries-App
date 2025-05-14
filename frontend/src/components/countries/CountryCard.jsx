@@ -17,6 +17,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { useAuth } from "../../context/AuthContext";
 import { favoritesApi } from "../../services/authApi";
+import { updateFavoriteCountry } from "../../utils/storage";
 
 /**
  * Card component displaying a country with basic information
@@ -37,9 +38,15 @@ const CountryCard = ({ country }) => {
       if (isFav) {
         const res = await favoritesApi.remove(country.cca3);
         setUser({ ...user, favorites: res.data.favorites });
+        
+        // Update cached favorites in localStorage
+        updateFavoriteCountry(country, false);
       } else {
         const res = await favoritesApi.add(country.cca3);
         setUser({ ...user, favorites: res.data.favorites });
+        
+        // Update cached favorites in localStorage
+        updateFavoriteCountry(country, true);
       }
     } catch (err) {
       console.error("Error updating favorites:", err);

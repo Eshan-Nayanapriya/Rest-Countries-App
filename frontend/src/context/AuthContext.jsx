@@ -6,6 +6,7 @@ import React, {
   useCallback,
 } from "react";
 import { authApi } from "../services/authApi";
+import { removeFromStorage, STORAGE_KEYS } from "../utils/storage";
 
 /**
  * Context for authentication state and operations
@@ -70,12 +71,15 @@ export const AuthProvider = ({ children }) => {
    * @param {string} email - User's email
    * @param {string} password - User's password
    * @returns {Promise} Login response
-   */
-  const login = async (email, password) => {
+   */  const login = async (email, password) => {
     setError(null);
     try {
       const res = await authApi.login({ email, password });
       setUser(res.data.user);
+      
+      // Clear any existing cached favorites since we're logging in
+      removeFromStorage(STORAGE_KEYS.FAVORITE_COUNTRIES);
+      
       return res;
     } catch (err) {
       const errorMessage =
@@ -92,12 +96,15 @@ export const AuthProvider = ({ children }) => {
    * @param {string} email - User's email
    * @param {string} password - User's password
    * @returns {Promise} Registration response
-   */
-  const register = async (username, email, password) => {
+   */  const register = async (username, email, password) => {
     setError(null);
     try {
       const res = await authApi.register({ username, email, password });
       setUser(res.data.user);
+      
+      // Clear any existing cached favorites since we're registering a new user
+      removeFromStorage(STORAGE_KEYS.FAVORITE_COUNTRIES);
+      
       return res;
     } catch (err) {
       const errorMessage =
@@ -109,15 +116,17 @@ export const AuthProvider = ({ children }) => {
 
   /**
    * Logout the current user
-   */
-  const logout = async () => {
+   */  const logout = async () => {
     try {
       await authApi.logout();
     } catch (err) {
       console.error("Error during logout:", err);
       // Continue with logout even if API call fails
     } finally {
-      localStorage.removeItem("authToken");
+      // Remove auth token
+      removeFromStorage(STORAGE_KEYS.AUTH_TOKEN);
+      // Clear favorites cache on logout
+      removeFromStorage(STORAGE_KEYS.FAVORITE_COUNTRIES);
       setUser(null);
       setError(null);
     }

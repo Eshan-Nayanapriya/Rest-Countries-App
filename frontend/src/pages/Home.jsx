@@ -5,17 +5,21 @@ import SearchAndFilter from "../components/countries/SearchAndFilter";
 import CountryList from "../components/countries/CountryList";
 import ImageSlider from "../components/home/ImageSlider";
 import { countryApi } from "../services/countryApi";
+import { getSearchFilters, saveSearchFilters } from "../utils/storage";
 
 /**
  * Home page component
  * Displays country search, filters, and list of countries
  */
 const Home = () => {
+  // Load saved filters from localStorage or use defaults
+  const savedFilters = getSearchFilters();
+  
   const [countries, setCountries] = useState([]);
   const [filteredCountries, setFilteredCountries] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [region, setRegion] = useState("All");
-  const [language, setLanguage] = useState("All");
+  const [searchQuery, setSearchQuery] = useState(savedFilters.searchQuery || "");
+  const [region, setRegion] = useState(savedFilters.region || "All");
+  const [language, setLanguage] = useState(savedFilters.language || "All");
   const [languages, setLanguages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -63,7 +67,6 @@ const Home = () => {
   useEffect(() => {
     fetchCountries();
   }, [fetchCountries]);
-
   // Apply filters when search, region, or language changes
   useEffect(() => {
     let filtered = [...countries];
@@ -89,6 +92,13 @@ const Home = () => {
       );
     }
 
+    // Save current filters to localStorage for persistence
+    saveSearchFilters({
+      searchQuery,
+      region,
+      language
+    });
+    
     setFilteredCountries(filtered);
   }, [searchQuery, region, language, countries]);
 
